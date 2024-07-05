@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>view360</h1>
+    <h1>view360-2</h1>
   </div>
 </template>
 
