@@ -2,7 +2,7 @@
   <div>
     hola
     <canvas class="webgl"></canvas>
-    <!-- <component :is="currentViewer"></component> -->
+    
   </div>
 </template>
 
@@ -13,15 +13,37 @@ import { createScene } from '../threeHelper/threeHelper'
 
 const texturesStore = useTexturesStore();
 
+
 onMounted(() => {
-  // Asegúrate de que currentTexture esté definido
-  texturesStore.loadTexture()
+  texturesStore.loadTexture();
   if (texturesStore.currentTexture) {
+    console.log('Current Texture:', texturesStore.currentTexture);
+    console.log(texturesStore.currentTexture);
     createScene(texturesStore.currentTexture);
   } else {
     console.warn('No hay textura seleccionada en el store');
   }
 });
+
+// onMounted(() => {
+//   texturesStore.loadTexture();
+//   if (texturesStore.currentTexture) {
+//     setTimeout(() => {
+//       createScene(texturesStore.currentTexture);
+//     }, 0); // Pequeño retraso para asegurar que el DOM esté listo
+//   } else {
+//     console.warn('No hay textura seleccionada en el store');
+//   }
+// });
+// onMounted(() => {
+//   // Asegúrate de que currentTexture esté definido
+//   texturesStore.loadTexture()
+//   if (texturesStore.currentTexture) {
+//     createScene(texturesStore.currentTexture);
+//   } else {
+//     console.warn('No hay textura seleccionada en el store');
+//   }
+// });
 </script>
 
 

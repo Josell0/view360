@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let canvas = document.querySelector('canvas.webgl');
 
 let sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 };
 
-export function createScene(texture) {
+export function createScene(currentTexture) {
+    let canvas = document.querySelector('canvas.webgl');
     if (!canvas) {
         console.error('Canvas element not found');
         return;
@@ -16,23 +16,53 @@ export function createScene(texture) {
 
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+    camera.rotation.z = Math.PI
+    
     scene.add(camera);
+
 
     // Controls
     const controls = new OrbitControls(camera, canvas);
-    controls.target.y = 3.5;
+    //controls.target.y = -3.5;
+    controls.target.set(1, 0, 0); // Ajusta según sea necesario para la orientación deseada
+    
     controls.enableDamping = true;
+    controls.update()
+    
+    // Invertir el movimiento de los controles
+    controls.rotateSpeed = -0.5;
+
 
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas
     });
 
     const textureLoader = new THREE.TextureLoader();
-    const environmentMap = textureLoader.load(texture, () => {
-        renderer.render(scene, camera); // Render once the texture is loaded
-    });
+    const environmentMap = textureLoader.load(currentTexture)
+    environmentMap.mapping = THREE.EquirectangularReflectionMapping
+    environmentMap.colorSpace = THREE.SRGBColorSpace
+
+    // const environmentMap = textureLoader.load(
+    //     currentTexture, 
+    //     () => {
+    //         renderer.render(scene, camera); // Render once the texture is loaded
+    //     },
+    //     undefined, // onProgress callback not used
+    //     (error) => {
+    //         console.error('Error loading texture:', error);
+    //     }
+    // );
+      
+    // const textureLoader = new THREE.TextureLoader();
+    // const environmentMap = textureLoader.load(currentTexture)
+    // const environmentMap = textureLoader.load(texture, () => {
+    //     renderer.render(scene, camera); // Render once the texture is loaded
+    //}
+
 
     scene.background = environmentMap;
+    console.log(scene.background)
+    console.log(currentTexture)
 
     // Update sizes
     window.addEventListener('resize', () => {

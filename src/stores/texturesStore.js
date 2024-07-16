@@ -9,7 +9,7 @@ export const useTexturesStore = defineStore('texturesStore', {
           {
             name: 'texture1',
             type: 'spherical', // 'spherical' o 'cubemap'
-            lowResTexture: 'spherical/UpTow-360-step1-cam01.jpg',
+            lowResTexture: '/spherical/UpTow-360-step1-cam01.jpg',
             highResTexture: null, // Puede estar indefinido
             points: [
               { x: 1, y: 2, z: 3 },
