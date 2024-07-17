@@ -1,89 +1,109 @@
 <template>
-  <div>
-    hola
-    <canvas class="webgl"></canvas>
-    
+  <div class="viewer-container">
+    <div v-if="currentProject" class="textures-container">
+      <div
+        v-for="(texture, textureIndex) in currentProject.textures"
+        :key="texture.name"
+        class="texture-square"
+        :style="{ backgroundImage: `url(${texture.lowResTexture})` }"
+        @click="changeTexture(textureIndex)"
+      ></div>
+    </div>
+    <canvas ref="canvasRef" class="webgl"></canvas>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useTexturesStore } from '../stores/texturesStore';
-import { createScene } from '../threeHelper/threeHelper'
+import { createScene, updateSceneTexture } from '../threeHelper/threeHelper';
 
 const texturesStore = useTexturesStore();
+const canvasRef = ref(null);
+let sceneObject = ref(null);
 
+const currentProject = ref(null);
 
-onMounted(() => {
-  texturesStore.loadTexture();
-  if (texturesStore.currentTexture) {
-    console.log('Current Texture:', texturesStore.currentTexture);
-    console.log(texturesStore.currentTexture);
-    createScene(texturesStore.currentTexture);
-  } else {
-    console.warn('No hay textura seleccionada en el store');
-  }
-});
+watch(
+  () => texturesStore.currentProjectIndex,
+  (newProjectIndex) => {
+    currentProject.value = texturesStore.projects[newProjectIndex];
+  },
+  { immediate: true }
+);
 
-// onMounted(() => {
-//   texturesStore.loadTexture();
-//   if (texturesStore.currentTexture) {
-//     setTimeout(() => {
-//       createScene(texturesStore.currentTexture);
-//     }, 0); // Pequeño retraso para asegurar que el DOM esté listo
-//   } else {
-//     console.warn('No hay textura seleccionada en el store');
-//   }
-// });
-// onMounted(() => {
-//   // Asegúrate de que currentTexture esté definido
-//   texturesStore.loadTexture()
-//   if (texturesStore.currentTexture) {
-//     createScene(texturesStore.currentTexture);
-//   } else {
-//     console.warn('No hay textura seleccionada en el store');
-//   }
-// });
-</script>
-
-
-
-
-<!-- <template>
-  <div>
-    <button @click="loadSpecificTexture(3)">Load Texture 4</button>
-    <button @click="loadSpecificTexture(5)">Load Texture 6</button>
-    <button @click="loadSpecificTexture(7)">Load Texture 8</button>
-  </div>
-</template>
-
-<script setup>
-import { computed, onMounted } from 'vue';
-import SphericalViewer from '../components/viewer/SphericalViewer.vue';
-import CubemapViewer from '../components/viewer/CubemapViewer.vue';
-
-// Importamos la tienda de texturas
-const spherical = SphericalViewer()
-
-
-
-// Definimos la propiedad computada para determinar el visor actual
-
-const currentViewer = computed(() => {
-  if (texturesStore.currentTexture) {
-    //return texturesStore.currentTexture.type === 'cubemap' ? 'CubemapViewer' : 'SphericalViewer';
-    spherical
-  }
-  return null;
-});
-
-// Método para cargar una textura específica
-const loadSpecificTexture = (textureIndex) => {
-  texturesStore.loadTexture(textureIndex);
+const changeTexture = (textureIndex) => {
+  texturesStore.setCurrentTextureIndex(textureIndex);
 };
 
-// Llamamos a initializeCurrentTexture cuando el componente se monta
+watch(
+  () => [texturesStore.currentLowResTexture, texturesStore.currentHighResTexture],
+  async ([newLowResTexture, newHighResTexture]) => {
+    if (sceneObject.value) {
+      await updateSceneTexture(sceneObject.value, newLowResTexture, newHighResTexture);
+    }
+  },
+  { immediate: true }
+);
+
 onMounted(() => {
-  texturesStore.initializeCurrentTexture();
+  sceneObject.value = createScene(
+    canvasRef.value,
+    texturesStore.currentLowResTexture,
+    texturesStore.currentHighResTexture
+  );
 });
-</script> -->
+
+onUnmounted(() => {
+  if (sceneObject.value && sceneObject.value.cleanup) {
+    sceneObject.value.cleanup();
+  }
+});
+</script>
+
+<style scoped>
+.viewer-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.textures-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.texture-square {
+  width: 4rem;
+  height: 4rem;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border-radius: 50px;
+  transition: transform 0.3s ease;
+}
+
+.texture-square:hover {
+  transform: scale(1.1);
+}
+
+.webgl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+</style>
