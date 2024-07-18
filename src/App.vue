@@ -37,6 +37,7 @@ nav {
 nav a {
   margin: 0 10px;
   text-decoration: none;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   color: #333;
 }
 
