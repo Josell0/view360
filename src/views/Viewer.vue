@@ -1,3 +1,4 @@
+
 <template>
   <div class="viewer-container">
     <div v-if="currentProject" class="textures-container">
@@ -106,4 +107,4 @@ onUnmounted(() => {
   height: 100%;
   z-index: 1;
 }
-</style>
+</style> 
