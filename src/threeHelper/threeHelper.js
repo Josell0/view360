@@ -1,24 +1,30 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { gsap } from 'gsap';
+// Importaciones de bibliotecas necesarias
+import * as THREE from 'three'; // Importa la biblioteca Three.js para gráficos 3D
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importa los controles de órbita para la cámara
+import { gsap } from 'gsap'; // Importa GSAP para animaciones suaves
 
+// Define el tamaño inicial de la ventana
 let sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 };
 
+// Función principal para crear la escena 3D
 export function createScene(canvas, lowResTexture, highResTexture) {
+    // Verifica si el elemento canvas existe
     if (!canvas) {
         console.error('Canvas element not found');
         return null;
     }
 
+    // Crea la escena, cámara y configuración inicial
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
-    camera.rotation.z = Math.PI;
+    camera.rotation.z = Math.PI; // Rota la cámara 180 grados
 
     scene.add(camera);
 
+    // Configura los controles de órbita para la cámara
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(1, 0, 0);
     controls.enableDamping = true;
@@ -27,18 +33,21 @@ export function createScene(canvas, lowResTexture, highResTexture) {
     controls.update();
     controls.rotateSpeed = -0.5;
 
+    // Crea el renderizador WebGL
     const renderer = new THREE.WebGLRenderer({ canvas: canvas });
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+    // Crea un cargador de texturas
     const textureLoader = new THREE.TextureLoader();
 
+    // Función para cargar texturas de forma asíncrona
     async function loadTexture(url) {
         return new Promise((resolve, reject) => {
             textureLoader.load(
                 url,
                 (texture) => {
-                    console.log(`Texture loaded successfully: ${url}`);
+                    
                     texture.mapping = THREE.EquirectangularReflectionMapping;
                     texture.colorSpace = THREE.SRGBColorSpace;
                     resolve(texture);
@@ -52,26 +61,29 @@ export function createScene(canvas, lowResTexture, highResTexture) {
         });
     }
 
+    // Función para configurar las texturas iniciales
     async function setupTextures() {
         let texture;
         
+        // Intenta cargar la textura de baja resolución primero
         if (lowResTexture) {
             try {
                 texture = await loadTexture(lowResTexture);
                 scene.background = texture;
                 renderer.render(scene, camera);
-                console.log("Low resolution texture loaded and applied");
+                
             } catch (error) {
                 console.warn("Failed to load low res texture, trying high res...");
             }
         }
 
+        // Intenta cargar la textura de alta resolución
         if (highResTexture) {
             try {
                 const highResTextureLoaded = await loadTexture(highResTexture);
                 scene.background = highResTextureLoaded;
                 renderer.render(scene, camera);
-                console.log("High resolution texture loaded and applied");
+                
             } catch (error) {
                 console.warn("Failed to load high res texture");
                 if (!texture) {
@@ -81,8 +93,10 @@ export function createScene(canvas, lowResTexture, highResTexture) {
         }
     }
 
+    // Llama a la función para configurar las texturas
     setupTextures();
 
+    // Maneja el redimensionamiento de la ventana
     window.addEventListener('resize', () => {
         sizes.width = window.innerWidth;
         sizes.height = window.innerHeight;
@@ -92,6 +106,7 @@ export function createScene(canvas, lowResTexture, highResTexture) {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     });
 
+    // Función de animación
     const clock = new THREE.Clock();
     function animate() {
         controls.update();
@@ -100,11 +115,13 @@ export function createScene(canvas, lowResTexture, highResTexture) {
     }
     animate();
 
+    // Función de limpieza
     function cleanup() {
         controls.dispose();
         renderer.dispose();
     }
 
+    // Retorna los objetos principales de la escena
     return {
         scene,
         camera,
@@ -114,15 +131,17 @@ export function createScene(canvas, lowResTexture, highResTexture) {
     };
 }
 
+// Función para actualizar la textura de la escena
 export async function updateSceneTexture(sceneObject, lowResTexture, highResTexture) {
     const textureLoader = new THREE.TextureLoader();
 
+    // Función para cargar texturas de forma asíncrona
     async function loadTexture(url) {
         return new Promise((resolve, reject) => {
             textureLoader.load(
                 url,
                 (texture) => {
-                    console.log(`Texture loaded successfully: ${url}`);
+                    
                     texture.mapping = THREE.EquirectangularReflectionMapping;
                     texture.colorSpace = THREE.SRGBColorSpace;
                     resolve(texture);
@@ -136,6 +155,7 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
         });
     }
 
+    // Función para realizar la transición de texturas con animación
     async function transitionTexture(newTextureUrl) {
         // Acercar el FOV de la cámara
         gsap.to(sceneObject.camera, {
@@ -162,19 +182,21 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
         });
     }
 
+    // Intenta cargar y aplicar la textura de baja resolución
     if (lowResTexture) {
         try {
             await transitionTexture(lowResTexture);
-            console.log("Low resolution texture loaded and applied");
+            
         } catch (error) {
             console.warn("Failed to load low res texture, trying high res...");
         }
     }
 
+    // Intenta cargar y aplicar la textura de alta resolución
     if (highResTexture) {
         try {
             await transitionTexture(highResTexture);
-            console.log("High resolution texture loaded and applied");
+            
         } catch (error) {
             console.warn("Failed to load high res texture");
             if (!lowResTexture) {
@@ -184,11 +206,11 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
     }
 }
 
+// import * as THREE from 'three'; // Importa Three.js
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importa OrbitControls de Three.js
+// import { gsap } from 'gsap'; // Importa GSAP para animaciones
 
-
-// import * as THREE from 'three';
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
+// // Define el tamaño de la ventana
 // let sizes = {
 //     width: window.innerWidth,
 //     height: window.innerHeight
@@ -323,12 +345,35 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
 //         });
 //     }
 
-//     let texture;
+//     async function transitionTexture(newTextureUrl) {
+//         // Acercar el FOV de la cámara
+//         gsap.to(sceneObject.camera, {
+//             duration: 0.25,
+//             fov: 70, // Reducir el FOV para acercar
+//             onUpdate: () => {
+//                 sceneObject.camera.updateProjectionMatrix();
+//             },
+//             onComplete: async () => {
+//                 // Cargar la nueva textura
+//                 const newTexture = await loadTexture(newTextureUrl);
+//                 sceneObject.scene.background = newTexture;
+//                 sceneObject.renderer.render(sceneObject.scene, sceneObject.camera);
+
+//                 // Alejar el FOV de la cámara
+//                 gsap.to(sceneObject.camera, {
+//                     duration: 0.05,
+//                     fov: 75, // Restaurar el FOV original
+//                     onUpdate: () => {
+//                         sceneObject.camera.updateProjectionMatrix();
+//                     }
+//                 });
+//             }
+//         });
+//     }
+
 //     if (lowResTexture) {
 //         try {
-//             texture = await loadTexture(lowResTexture);
-//             sceneObject.scene.background = texture;
-//             sceneObject.renderer.render(sceneObject.scene, sceneObject.camera);
+//             await transitionTexture(lowResTexture);
 //             console.log("Low resolution texture loaded and applied");
 //         } catch (error) {
 //             console.warn("Failed to load low res texture, trying high res...");
@@ -337,16 +382,13 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
 
 //     if (highResTexture) {
 //         try {
-//             const highResTextureLoaded = await loadTexture(highResTexture);
-//             sceneObject.scene.background = highResTextureLoaded;
-//             sceneObject.renderer.render(sceneObject.scene, sceneObject.camera);
+//             await transitionTexture(highResTexture);
 //             console.log("High resolution texture loaded and applied");
 //         } catch (error) {
 //             console.warn("Failed to load high res texture");
-//             if (!texture) {
+//             if (!lowResTexture) {
 //                 console.error("No textures could be loaded");
 //             }
 //         }
 //     }
 // }
-
