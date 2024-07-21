@@ -153,7 +153,6 @@ onUnmounted(() => {
   padding: 0.5rem 1rem;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 1.5rem; /* Tamaño de fuente más grande */
-  
   text-decoration: none; /* Sin subrayado */
   color: white; /* Color del texto */
   background: none; /* Sin fondo */
