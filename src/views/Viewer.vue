@@ -1,59 +1,92 @@
 <template>
-  <!-- Contenedor principal de la vista del visor -->
   <div class="viewer-container">
-    <!-- Contenedor de texturas, visible solo si currentProject está definido -->
     <div v-if="currentProject" class="textures-container">
-      <!-- Recorre cada textura en el proyecto actual y crea un div para cada una -->
-      <div
-        v-for="(texture, textureIndex) in currentProject.textures"
-        :key="texture.name"
-        class="texture-square"
-        :style="{ backgroundImage: `url(${texture.lowResTexture})` }"
-        @click="changeTexture(textureIndex)"
-      ></div>
+      <div v-for="(texture, textureIndex) in currentProject.textures" :key="texture.name" class="texture-square"
+        :style="{ backgroundImage: `url(${texture.lowResTexture})` }" @click="changeTexture(textureIndex)"></div>
+      <!-- Añadir el botón Steps -->
+      <router-link class="steps-button" to="/">STEPS</router-link>
     </div>
-    <!-- Elemento canvas para renderizar la escena 3D -->
+    <!-- Mostrar el título del proyecto con botones de navegación -->
+    <div class="project-title">
+      <button @click="prevProject" class="nav-button"><</button>
+     <div class="project-step">{{ currentProject.projectName }}</div> 
+      <button @click="nextProject" class="nav-button">></button>
+    </div>
     <canvas ref="canvasRef" class="webgl"></canvas>
+    <img v-if="currentProjectMap" :src="currentProjectMap" alt="Project Map" class="overlay-image" />
+    <div v-for="(texture, textureIndex) in currentProject.textures" :key="`marker-${textureIndex}`">
+      <div v-if="texture.cameraMiniMap" :class="['minimap-marker', { active: currentTextureIndex === textureIndex }]"
+        :style="{ left: `${texture.cameraMiniMap.x}%`, top: `${texture.cameraMiniMap.y}%` }"
+        @click="currentTextureIndex !== textureIndex && navigateToTexture(textureIndex)"></div>
+    </div>
   </div>
 </template>
 
+
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'; // Importa funciones de Vue
-import { useTexturesStore } from '../stores/texturesStore'; // Importa la tienda de texturas
-import { createScene, updateSceneTexture } from '../threeHelper/threeHelper'; // Importa funciones de ayuda para Three.js
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { useTexturesStore } from '../stores/texturesStore';
+import { createScene, updateSceneTexture } from '../threeHelper/threeHelper';
 
-const texturesStore = useTexturesStore(); // Usa la tienda de texturas
-const canvasRef = ref(null); // Referencia al elemento canvas
-let sceneObject = ref(null); // Objeto de la escena 3D
+const texturesStore = useTexturesStore();
+const canvasRef = ref(null);
+let sceneObject = ref(null);
 
-const currentProject = ref(null); // Proyecto actual
+const currentProject = ref(null);
+const currentProjectMap = ref(null);
+const currentCameraMiniMap = ref(null);
+const currentTextureIndex = ref(texturesStore.currentTextureIndex);
 
-// Observa cambios en el índice del proyecto actual en la tienda de texturas
 watch(
   () => texturesStore.currentProjectIndex,
   (newProjectIndex) => {
-    currentProject.value = texturesStore.projects[newProjectIndex]; // Actualiza el proyecto actual
+    currentProject.value = texturesStore.projects[newProjectIndex];
+    currentProjectMap.value = texturesStore.projects[newProjectIndex].projectMap;
   },
-  { immediate: true } // Ejecuta inmediatamente
+  { immediate: true }
 );
 
-// Función para cambiar la textura actual
+watch(
+  () => texturesStore.currentTextureIndex,
+  (newTextureIndex) => {
+    currentTextureIndex.value = newTextureIndex;
+    currentCameraMiniMap.value = texturesStore.projects[texturesStore.currentProjectIndex].textures[newTextureIndex].cameraMiniMap;
+  },
+  { immediate: true }
+);
+
 const changeTexture = (textureIndex) => {
-  texturesStore.setCurrentTextureIndex(textureIndex); // Cambia el índice de la textura actual en la tienda
+  texturesStore.setCurrentTextureIndex(textureIndex);
 };
 
-// Observa cambios en las texturas de baja y alta resolución actuales
+const navigateToTexture = (textureIndex) => {
+  texturesStore.setCurrentTextureIndex(textureIndex);
+};
+
+const prevProject = () => {
+  const newIndex = (texturesStore.currentProjectIndex - 1 + texturesStore.projects.length) % texturesStore.projects.length;
+  const currentTexture = texturesStore.currentTextureIndex;
+  texturesStore.setCurrentProjectIndex(newIndex);
+  texturesStore.setCurrentTextureIndex(currentTexture);
+};
+
+const nextProject = () => {
+  const newIndex = (texturesStore.currentProjectIndex + 1) % texturesStore.projects.length;
+  const currentTexture = texturesStore.currentTextureIndex;
+  texturesStore.setCurrentProjectIndex(newIndex);
+  texturesStore.setCurrentTextureIndex(currentTexture);
+};
+
 watch(
   () => [texturesStore.currentLowResTexture, texturesStore.currentHighResTexture],
   async ([newLowResTexture, newHighResTexture]) => {
     if (sceneObject.value) {
-      await updateSceneTexture(sceneObject.value, newLowResTexture, newHighResTexture); // Actualiza la textura de la escena
+      await updateSceneTexture(sceneObject.value, newLowResTexture, newHighResTexture);
     }
   },
-  { immediate: true } // Ejecuta inmediatamente
+  { immediate: true }
 );
 
-// Crea la escena 3D cuando el componente se monta
 onMounted(() => {
   sceneObject.value = createScene(
     canvasRef.value,
@@ -62,13 +95,17 @@ onMounted(() => {
   );
 });
 
-// Limpia la escena 3D cuando el componente se desmonta
 onUnmounted(() => {
   if (sceneObject.value && sceneObject.value.cleanup) {
     sceneObject.value.cleanup();
   }
 });
 </script>
+
+
+
+
+
 
 <style scoped>
 .viewer-container {
@@ -85,10 +122,10 @@ onUnmounted(() => {
   display: flex;
   gap: 1rem;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0);
   padding: 10px 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
 }
 
 .texture-square {
@@ -96,6 +133,7 @@ onUnmounted(() => {
   height: 4rem;
   background-size: cover;
   background-position: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   cursor: pointer;
   border: 2px solid #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -107,6 +145,22 @@ onUnmounted(() => {
   transform: scale(1.25);
 }
 
+.steps-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  padding: 0.5rem 1rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.5rem; /* Tamaño de fuente más grande */
+  
+  text-decoration: none; /* Sin subrayado */
+  color: white; /* Color del texto */
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  cursor: pointer;
+}
+
 .webgl {
   position: absolute;
   top: 0;
@@ -115,11 +169,93 @@ onUnmounted(() => {
   height: 100%;
   z-index: 1;
 }
+
+.overlay-image {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+  width: 190px;
+  opacity: 0.7;
+  z-index: 11;
+}
+
+.project-title {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
+
+.project-step{
+  opacity: 50%;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: bold;
+  color: green;
+  border: black;
+  cursor: pointer;
+  margin: 0 1rem;
+}
+
+.minimap-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  
+  border-radius: 50%;
+  z-index: 12;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  animation: pulse 1.5s infinite;
+}
+
+.minimap-marker:hover {
+  background-color: red;
+  transform: scale(1.25);
+}
+
+.minimap-marker.active {
+  background-color: red;
+  cursor: default;
+  pointer-events: none;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, .1);
+  }
+  60% {
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
 </style>
 
 
-<!-- 
-<template>
+
+
+
+
+
+
+<!-- <template>
   <div class="viewer-container">
     <div v-if="currentProject" class="textures-container">
       <div
@@ -131,6 +267,15 @@ onUnmounted(() => {
       ></div>
     </div>
     <canvas ref="canvasRef" class="webgl"></canvas>
+    <img v-if="currentProjectMap" :src="currentProjectMap" alt="Project Map" class="overlay-image" />
+    <div v-for="(texture, textureIndex) in currentProject.textures" :key="`marker-${textureIndex}`">
+      <div
+        v-if="texture.cameraMiniMap"
+        :class="['minimap-marker', { active: currentTextureIndex === textureIndex }]"
+        :style="{ left: `${texture.cameraMiniMap.x}%`, top: `${texture.cameraMiniMap.y}%` }"
+        @click="currentTextureIndex !== textureIndex && navigateToTexture(textureIndex)"
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -144,16 +289,33 @@ const canvasRef = ref(null);
 let sceneObject = ref(null);
 
 const currentProject = ref(null);
+const currentProjectMap = ref(null);
+const currentCameraMiniMap = ref(null);
+const currentTextureIndex = ref(texturesStore.currentTextureIndex);
 
 watch(
   () => texturesStore.currentProjectIndex,
   (newProjectIndex) => {
     currentProject.value = texturesStore.projects[newProjectIndex];
+    currentProjectMap.value = texturesStore.projects[newProjectIndex].projectMap;
+  },
+  { immediate: true }
+);
+
+watch(
+  () => texturesStore.currentTextureIndex,
+  (newTextureIndex) => {
+    currentTextureIndex.value = newTextureIndex;
+    currentCameraMiniMap.value = texturesStore.projects[texturesStore.currentProjectIndex].textures[newTextureIndex].cameraMiniMap;
   },
   { immediate: true }
 );
 
 const changeTexture = (textureIndex) => {
+  texturesStore.setCurrentTextureIndex(textureIndex);
+};
+
+const navigateToTexture = (textureIndex) => {
   texturesStore.setCurrentTextureIndex(textureIndex);
 };
 
@@ -216,7 +378,7 @@ onUnmounted(() => {
 }
 
 .texture-square:hover {
-  transform: scale(1.1);
+  transform: scale(1.25);
 }
 
 .webgl {
@@ -227,4 +389,52 @@ onUnmounted(() => {
   height: 100%;
   z-index: 1;
 }
-</style>  -->
+
+.overlay-image {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 150px;
+  opacity: 0.7;
+  z-index: 11;
+}
+
+.minimap-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: gray;
+  border-radius: 50%;
+  z-index: 12;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  animation: pulse 1.5s infinite;
+}
+
+.minimap-marker:hover {
+  background-color: red;
+  transform: scale(1.25);
+}
+
+.minimap-marker.active {
+  background-color: green;
+  cursor: default;
+  pointer-events: none;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba( 255, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, .1);
+  }
+  60% {
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+</style> -->

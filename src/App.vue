@@ -2,12 +2,12 @@
   <div>
     
 
-    <nav>
-      <router-link to="/">UpTown Steps</router-link>
-      <!-- <router-link to="/login">Login</router-link> |
-      <router-link to="/Register">Register</router-link> -->
-    </nav>
-    <router-view></router-view>
+    <!-- <nav>
+     <router-link to="/">UpTown Steps</router-link> 
+     <router-link to="/login">Login</router-link> |
+      <router-link to="/Register">Register</router-link> 
+    </nav>-->
+    <router-view></router-view> 
   </div>
 </template>
 
