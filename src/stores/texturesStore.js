@@ -5,7 +5,7 @@ export const useTexturesStore = defineStore('texturesStore', {
   state: () => ({
     projects: [
       {
-        projectName: 'STEP 1',
+        projectName: 'PHASE 1',
         projectMap: '/maps/step1.png',
         textures: [
           {
@@ -100,7 +100,7 @@ export const useTexturesStore = defineStore('texturesStore', {
         ]
       },
       {
-        projectName: 'STEP 2',
+        projectName: 'PHASE 2',
         projectMap: '/maps/step2.png',
         textures: [
           {
@@ -195,7 +195,7 @@ export const useTexturesStore = defineStore('texturesStore', {
         ]
       },
       {
-        projectName: 'STEP 3',
+        projectName: 'PHASE 3',
         projectMap: '/maps/step3.png',
         textures: [
           {
@@ -290,7 +290,7 @@ export const useTexturesStore = defineStore('texturesStore', {
         ]
       },
       {
-        projectName: 'STEP 4',
+        projectName: 'PHASE 4',
         projectMap: '/maps/step4.png',
         textures: [
           {
