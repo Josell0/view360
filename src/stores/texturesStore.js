@@ -17,7 +17,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinate: { x: 4, y: 10, z: 6 }, targetTextureId: 2 },
               { coordinate: { x: 4, y: 15, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 98.5, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 88.5, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture2',
@@ -28,7 +28,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.2, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 69.2, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture3',
@@ -39,7 +39,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture4',
@@ -50,7 +50,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 91.4, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 21.4, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture5',
@@ -61,7 +61,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture6',
@@ -72,7 +72,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 94.9, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 55, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture7',
@@ -83,7 +83,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.1, y: 6.7} // Coordenadas del mini mapa
+            cameraMiniMap: { x: 67, y: 49.7} // Coordenadas del mini mapa
           },
           {
             name: 'texture8',
@@ -94,7 +94,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 9 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 65 } // Coordenadas del mini mapa
           },
           
         ]
@@ -112,7 +112,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinate: { x: 4, y: 10, z: 6 }, targetTextureId: 2 },
               { coordinate: { x: 4, y: 15, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 98.5, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 88.5, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture2',
@@ -123,7 +123,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.2, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 69.2, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture3',
@@ -134,7 +134,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture4',
@@ -145,7 +145,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 91.4, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 21.4, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture5',
@@ -156,7 +156,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture6',
@@ -167,7 +167,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 94.9, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 55, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture7',
@@ -178,7 +178,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.1, y: 6.7} // Coordenadas del mini mapa
+            cameraMiniMap: { x: 67, y: 49.7} // Coordenadas del mini mapa
           },
           {
             name: 'texture8',
@@ -189,7 +189,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 9 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 65 } // Coordenadas del mini mapa
           },
           
         ]
@@ -207,7 +207,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinate: { x: 4, y: 10, z: 6 }, targetTextureId: 2 },
               { coordinate: { x: 4, y: 15, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 98.5, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 88.5, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture2',
@@ -218,18 +218,18 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.2, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 69.2, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture3',
             type: 'spherical', // 'spherical' o 'cubemap'
-            lowResTexture: '/spherical/UpTow-360-step3-cam03.webp',
-            highResTexture: '/spherical/UpTow-360-step3-cam03.jpg', // Puede estar indefinido
+            lowResTexture: '/spherical/UpTow-360-step1-cam03.webp',
+            highResTexture: '/spherical/UpTow-360-step1-cam03.jpg', // Puede estar indefinido
             points: [
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture4',
@@ -240,7 +240,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 91.4, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 21.4, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture5',
@@ -251,7 +251,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture6',
@@ -262,7 +262,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 94.9, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 55, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture7',
@@ -273,7 +273,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.1, y: 6.7} // Coordenadas del mini mapa
+            cameraMiniMap: { x: 67, y: 49.7} // Coordenadas del mini mapa
           },
           {
             name: 'texture8',
@@ -284,7 +284,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 9 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 65 } // Coordenadas del mini mapa
           },
           
         ]
@@ -302,7 +302,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinate: { x: 4, y: 10, z: 6 }, targetTextureId: 2 },
               { coordinate: { x: 4, y: 15, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 98.5, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 88.5, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture2',
@@ -313,7 +313,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.2, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 69.2, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture3',
@@ -324,7 +324,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture4',
@@ -335,7 +335,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 91.4, y: 4.2 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 21.4, y: 32.2 } // Coordenadas del mini mapa
           },
           {
             name: 'texture5',
@@ -346,7 +346,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture6',
@@ -357,7 +357,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 94.9, y: 6.7 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 55, y: 49.7 } // Coordenadas del mini mapa
           },
           {
             name: 'texture7',
@@ -368,7 +368,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 96.1, y: 6.7} // Coordenadas del mini mapa
+            cameraMiniMap: { x: 67, y: 49.7} // Coordenadas del mini mapa
           },
           {
             name: 'texture8',
@@ -379,7 +379,7 @@ export const useTexturesStore = defineStore('texturesStore', {
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
             ],
-            cameraMiniMap: { x: 93.8, y: 9 } // Coordenadas del mini mapa
+            cameraMiniMap: { x: 43.8, y: 65 } // Coordenadas del mini mapa
           },
           
         ]

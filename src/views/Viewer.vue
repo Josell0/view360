@@ -1,44 +1,53 @@
 <template>
-  <div class="viewer-container">
+  <div ref="viewerContainerRef" class="viewer-container">
     <div v-if="currentProject" class="textures-container">
       <div v-for="(texture, textureIndex) in currentProject.textures" :key="texture.name" class="texture-square"
         :style="{ backgroundImage: `url(${texture.lowResTexture})` }" @click="changeTexture(textureIndex)"></div>
-      <!-- Añadir el botón Steps -->
       <router-link class="steps-button" to="/">STEPS</router-link>
     </div>
-    <!-- Mostrar el título del proyecto con botones de navegación -->
     <div class="project-title">
-      <button @click="prevProject" class="nav-button"><</button>
-          <div class="project-step">{{ currentProject.projectName }}</div>
-          <button @click="nextProject" class="nav-button">></button>
+      <button @click="prevProject" class="nav-button"> < </button>
+      <div class="project-step">{{ currentProject.projectName }}</div>
+      <button @click="nextProject" class="nav-button"> > </button>
     </div>
     <canvas ref="canvasRef" class="webgl"></canvas>
-    <div class="miniMapContainer">
+    <div class="miniMapContainer" ref="miniMapContainer">
       <img v-if="currentProjectMap" ref="overlayImage" :src="currentProjectMap" alt="Project Map" class="overlay-image" />
       <div v-for="(texture, textureIndex) in currentProject.textures" :key="`marker-${textureIndex}`">
         <div v-if="texture.cameraMiniMap" :class="['minimap-marker', { active: currentTextureIndex === textureIndex }]"
-          :style="{ left: `${texture.cameraMiniMap.x}%`, top: `${texture.cameraMiniMap.y}%` }"
+          :style="{ left: `${texture.cameraMiniMap.x}%`, top: `${texture.cameraMiniMap.y}%`, width: markerSize, height: markerSize }"
           @click="currentTextureIndex !== textureIndex && navigateToTexture(textureIndex)"></div>
       </div>
     </div>
+    <button @click="toggleFullScreen" class="fullscreen-button">
+      <img :src="isFullScreen ? exitFullscreenIcon : enterFullscreenIcon"
+        :alt="isFullScreen ? 'Exit Fullscreen' : 'Enter Fullscreen'" class="fullscreen-icon">
+    </button>
   </div>
 </template>
-
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { useTexturesStore } from '../stores/texturesStore';
-import { createScene, updateSceneTexture } from '../threeHelper/threeHelper';
+import { createScene, updateSceneTexture, addScrollListener } from '../threeHelper/threeHelper';
+import enterFullscreenIcon from '/fullscreen.svg';
+import exitFullscreenIcon from '/exit-fullscreen.svg';
 
 const texturesStore = useTexturesStore();
 const canvasRef = ref(null);
 const overlayImageRef = ref(null);
+const miniMapContainerRef = ref(null);
+const viewerContainerRef = ref(null);
+
+const isFullScreen = ref(false);
+
 let sceneObject = ref(null);
 
 const currentProject = ref(null);
 const currentProjectMap = ref(null);
 const currentCameraMiniMap = ref(null);
 const currentTextureIndex = ref(texturesStore.currentTextureIndex);
+const markerSize = ref('5%');
 
 watch(
   () => texturesStore.currentProjectIndex,
@@ -92,18 +101,24 @@ watch(
 
 const updateMarkerPositions = () => {
   const overlayImage = overlayImageRef.value;
-  if (overlayImage) {
-    const width = overlayImage.clientWidth;
-    const height = overlayImage.clientHeight;
+  const miniMapContainer = miniMapContainerRef.value;
+  if (overlayImage && miniMapContainer) {
+    const containerRect = miniMapContainer.getBoundingClientRect();
+    const overlayRect = overlayImage.getBoundingClientRect();
     const markers = document.querySelectorAll('.minimap-marker');
     markers.forEach(marker => {
       const x = parseFloat(marker.style.left);
       const y = parseFloat(marker.style.top);
-      marker.style.left = `${(x / 100) * width}px`;
-      marker.style.top = `${(y / 100) * height}px`;
+      marker.style.left = `${(x / 100) * overlayRect.width}px`;
+      marker.style.top = `${(y / 100) * overlayRect.height}px`;
+      marker.style.width = `${5 * (overlayRect.width / 100)}px`;
+      marker.style.height = `${5 * (overlayRect.width / 100)}px`;
     });
+    markerSize.value = `${5 * (overlayRect.width / 100)}px`;
   }
 };
+
+let removeScrollListener;
 
 onMounted(() => {
   sceneObject.value = createScene(
@@ -112,7 +127,13 @@ onMounted(() => {
     texturesStore.currentHighResTexture
   );
   window.addEventListener('resize', updateMarkerPositions);
-  nextTick(updateMarkerPositions); // Update marker positions after initial render
+  removeScrollListener = addScrollListener(sceneObject.value);
+  nextTick(updateMarkerPositions);
+
+  // Agregar un event listener para detectar cambios en el estado de pantalla completa
+  document.addEventListener('fullscreenchange', () => {
+    isFullScreen.value = !!document.fullscreenElement;
+  });
 });
 
 onUnmounted(() => {
@@ -120,7 +141,48 @@ onUnmounted(() => {
     sceneObject.value.cleanup();
   }
   window.removeEventListener('resize', updateMarkerPositions);
+  if (removeScrollListener) {
+    removeScrollListener();
+  }
+  // Remover el event listener
+  document.removeEventListener('fullscreenchange', () => {
+    isFullScreen.value = !!document.fullscreenElement;
+  });
+
 });
+
+const toggleFullScreen = () => {
+  nextTick(() => {
+    const element = viewerContainerRef.value;
+    if (element) {
+      if (!document.fullscreenElement) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+        isFullScreen.value = true;
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        isFullScreen.value = false;
+      }
+    } else {
+      console.error("Viewer container is not available for fullscreen request");
+    }
+  });
+};
 </script>
 
 <style scoped>
@@ -141,7 +203,6 @@ onUnmounted(() => {
   background-color: rgba(255, 255, 255, 0);
   padding: 10px 20px;
   border-radius: 10px;
-
 }
 
 .texture-square {
@@ -169,15 +230,10 @@ onUnmounted(() => {
   padding: 0.5rem 1rem;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 1.5rem;
-  /* Tamaño de fuente más grande */
   text-decoration: none;
-  /* Sin subrayado */
   color: white;
-  /* Color del texto */
   background: none;
-  /* Sin fondo */
   border: none;
-  /* Sin borde */
   cursor: pointer;
 }
 
@@ -190,19 +246,19 @@ onUnmounted(() => {
   z-index: 1;
 }
 
-.miniMapContainer{
-  width: 8rem;
-  height: 8rem;
-  
-}
-
-.overlay-image {
+.miniMapContainer {
   position: absolute;
   top: 3px;
   right: 10px;
   width: 10%;
-  opacity: 0.7;
+  height: auto;
   z-index: 11;
+}
+
+.overlay-image {
+  width: 100%;
+  height: auto;
+  opacity: 0.7;
 }
 
 .project-title {
@@ -235,8 +291,6 @@ onUnmounted(() => {
 
 .minimap-marker {
   position: absolute;
-  width: .7%;
-  height: .9%;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
   z-index: 12;
@@ -257,13 +311,37 @@ onUnmounted(() => {
   animation: none;
 }
 
+.fullscreen-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  /* Ajusta según sea necesario */
+}
+
+.fullscreen-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
   }
 
   50% {
-    box-shadow: 0 0 0 5px rgba(255, 0, 0, .1);
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, 0.1);
   }
 
   60% {

@@ -1,5 +1,3 @@
-
-
 // Importaciones de bibliotecas necesarias
 import * as THREE from 'three'; // Importa la biblioteca Three.js para gráficos 3D
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importa los controles de órbita para la cámara
@@ -54,10 +52,12 @@ export function createScene(canvas, lowResTexture, highResTexture) {
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(1, 0, 0);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = 0.1; // Ajusta el factor de damping para más suavidad
     controls.zoomSpeed = 1.2;
-    controls.update();
     controls.rotateSpeed = -0.5;
+    controls.minPolarAngle = 0; // Límite inferior para la rotación vertical
+    controls.maxPolarAngle = Math.PI; // Límite superior para la rotación vertical
+    controls.update();
 
     // Crea el renderizador WebGL
     const renderer = new THREE.WebGLRenderer({ canvas: canvas });
@@ -225,4 +225,29 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
             }
         }
     }
+}
+
+// Nueva función para manejar el evento de scroll y ajustar el FOV
+function handleScroll(sceneObject, event) {
+    const minFov = 25;
+    const maxFov = 100;
+    const fovChange = event.deltaY * 0.05;
+    sceneObject.camera.fov = THREE.MathUtils.clamp(sceneObject.camera.fov + fovChange, minFov, maxFov);
+    sceneObject.camera.updateProjectionMatrix();
+
+    // Ajustar rotateSpeed en función del FOV
+    const minRotateSpeed = -0.1;
+    const maxRotateSpeed = -0.5;
+    const rotateSpeed = minRotateSpeed + (maxRotateSpeed - minRotateSpeed) * ((sceneObject.camera.fov - minFov) / (maxFov - minFov));
+    sceneObject.controls.rotateSpeed = rotateSpeed;
+}
+
+// Función para añadir el listener de scroll
+export function addScrollListener(sceneObject) {
+    const scrollHandler = (event) => handleScroll(sceneObject, event);
+    window.addEventListener('wheel', scrollHandler);
+
+    return () => {
+        window.removeEventListener('wheel', scrollHandler);
+    };
 }

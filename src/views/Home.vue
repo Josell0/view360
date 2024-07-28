@@ -1,7 +1,9 @@
 <template>
+  <div class="background"></div>
+  <div class="svg-background"></div>
+  <h1>UPTOWN</h1>
   <div class="projects-container">
     <!-- SVG Background Container -->
-    <div class="svg-background"></div>
     
     <div class="projects-grid">
       <button
@@ -43,6 +45,35 @@ const getProjectBackgroundImage = (project) => {
   min-height: 100vh;
   padding: 20px;
   position: relative; /* Ensure positioned relative to contain the SVG */
+
+}
+
+h1{
+  position: absolute;
+  top: 10rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 100%;
+  z-index: 1000;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 5rem;
+  
+  
+}
+
+.background{
+  background-image: url('/UpTow-Aereal-01-03.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0.5; /* Ajusta este valor para cambiar la opacidad */
 }
 
 .svg-background {
@@ -51,9 +82,11 @@ const getProjectBackgroundImage = (project) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/uLogo.svg') repeat;
+  background: url('/uLogo.svg');
+  background-repeat: space; /* Esto distribuye el espacio entre las repeticiones */
+  background-size: 300px; /* Ajusta este valor al tamaño deseado de tu SVG */
   opacity: 0.2;
-  z-index: -1; /* Ensure it is behind other content */
+  z-index: -1;
 }
 
 .projects-grid {
