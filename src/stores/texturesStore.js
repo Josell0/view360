@@ -223,8 +223,8 @@ export const useTexturesStore = defineStore('texturesStore', {
           {
             name: 'texture3',
             type: 'spherical', // 'spherical' o 'cubemap'
-            lowResTexture: '/spherical/UpTow-360-step1-cam03.webp',
-            highResTexture: '/spherical/UpTow-360-step1-cam03.jpg', // Puede estar indefinido
+            lowResTexture: '/spherical/UpTow-360-step3-cam03.webp',
+            highResTexture: '/spherical/UpTow-360-step3-cam03.jpg', // Puede estar indefinido
             points: [
               { coordinates: { x: 1, y: 2, z: 3 }, targetTextureId: 2 },
               { coordinates: { x: 4, y: 5, z: 6 }, targetTextureId: 3 },
