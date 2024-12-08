@@ -11,13 +11,14 @@
   "dependencies": {
     "firebase": "^10.12.3",
     "gsap": "^3.12.5",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "three": "^0.166.1",
     "vue": "^3.4.29",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue": "^5.2.1",
     "vite": "^5.3.1"
   }
 }
