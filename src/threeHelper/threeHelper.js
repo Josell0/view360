@@ -1,4 +1,5 @@
-// Importaciones de bibliotecas necesarias
+
+  // Importaciones de bibliotecas necesarias
 import * as THREE from 'three'; // Importa la biblioteca Three.js para gráficos 3D
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importa los controles de órbita para la cámara
 import { gsap } from 'gsap'; // Importa GSAP para animaciones suaves
@@ -73,14 +74,14 @@ export function createScene(canvas, lowResTexture, highResTexture) {
             textureLoader.load(
                 url,
                 (texture) => {
+                    texture.needsUpdate = true;  // Asegúrate de que la textura se actualice
                     texture.mapping = THREE.EquirectangularReflectionMapping;
                     texture.colorSpace = THREE.SRGBColorSpace;
-                    texture.needsUpdate = true;  // Asegúrate de que la textura se actualice
                     resolve(texture);
                 },
                 undefined,
                 (error) => {
-                    console.error(`Error loading texture: ${url}`, error);
+                    console.error(Error loading texture: ${url}, error);
                     reject(error);
                 }
             );
@@ -135,6 +136,7 @@ export function createScene(canvas, lowResTexture, highResTexture) {
     function animate() {
         controls.update();
         renderer.render(scene, camera);
+        animateMarkers(); // llamar aquí cada frame
         requestAnimationFrame(animate);
     }
     animate();
@@ -171,7 +173,7 @@ export async function updateSceneTexture(sceneObject, lowResTexture, highResText
                 },
                 undefined,
                 (error) => {
-                    console.error(`Error loading texture: ${url}`, error);
+                    console.error(Error loading texture: ${url}, error);
                     reject(error);
                 }
             );
